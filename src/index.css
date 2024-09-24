@@ -5,3 +5,6 @@ input {
   border-color: black;
   border: 2px;
 }
+* {
+  font-family: sans-serif;
+}

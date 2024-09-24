@@ -1,16 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { fetcherWithAxios } from "./FetcherWithAxios";
 import LoadingSpinner from "./LoadingSpinner";
 import ErrorPage from "./Error";
 import UserNotFound from "./UserNotFound";
-// for alternate rows 1 = white another bg-gray-50
+
 function DataTable() {
   const [users, setUsers] = useState([]);
+
   const [searchVal, setSearchVal] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const inputEl = useRef(null);
+  // pagination states
 
   useEffect(() => {
+    inputEl.current.focus();
+
     const fetchUsers = async () => {
       try {
         setIsLoading(true);
@@ -33,16 +38,26 @@ function DataTable() {
       window.alert("Search input empty. Please enter a valid input");
       return;
     }
-
     const filterBySearch = users.filter((user) =>
       user.firstName.toLowerCase().includes(searchVal.toLowerCase())
     );
-
     setUsers(filterBySearch);
-
     setSearchVal("");
   }
-  console.log(error);
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearchClick();
+    }
+  };
+  function handleSortName() {
+    const sortedNameArray = users.sort((a, b) => {
+      if (a.firstName > b.firstName) return 1;
+      if (a.firstName < b.firstName) return -1;
+    });
+    setUsers(sortedNameArray);
+    console.log(sortedNameArray);
+  }
+
   return (
     <>
       {error && <ErrorPage message={error.message} />}
@@ -50,6 +65,7 @@ function DataTable() {
         {/* search bar */}
         <div className="flex justify-between p-4 items-center">
           <h1 className="text-xl mb-2 font-bold ">Data Table</h1>
+          <button onClick={handleSortName}>sort by name</button>
           <div className="w-full max-w-sm min-w-[200px]">
             <div className="relative">
               <input
@@ -57,6 +73,8 @@ function DataTable() {
                 placeholder="Search by name..."
                 value={searchVal}
                 onChange={(e) => setSearchVal(e.target.value)}
+                ref={inputEl}
+                onKeyDown={handleKeyDown}
               />
               <button
                 onClick={handleSearchClick}
@@ -86,11 +104,11 @@ function DataTable() {
             <thead className="bg-gray-100 border-b-2 border-gray-400">
               <tr>
                 {users.length === 0 && <th></th>}
-                <th className="border border-slate-300 w-15 p-3 text-sm tracking-wide text-left">
+                <th className="border border-slate-300 w-10 p-3 text-sm tracking-wide text-left">
                   No.
                 </th>
                 <th className="border border-slate-300 w-20 p-3 text-sm tracking-wide text-left">
-                  First Name
+                  <button onClick={handleSortName}>First Name</button>
                 </th>
                 <th className="border border-slate-300 w-20 p-3 text-sm tracking-wide text-left">
                   Last Name

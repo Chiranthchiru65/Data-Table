@@ -96,7 +96,7 @@ function UserNotFound({ searchVal }) {
           </svg>
           <div className=" tracking-widest mt-4">
             <span className="text-gray-500 text-xl">
-              {`Sorry, We couldn't find ${message}`}
+              {`Sorry, We couldn't find user: ${message}`}
             </span>
           </div>
         </center>

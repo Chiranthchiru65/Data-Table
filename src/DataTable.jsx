@@ -22,6 +22,7 @@ function DataTable() {
         const userData = await fetcherWithAxios("https://dummyjson.com/users");
 
         setUsers(userData.users);
+        console.log(userData.users);
       } catch (err) {
         setError(err);
       } finally {
@@ -32,14 +33,18 @@ function DataTable() {
   }, []);
 
   //   handling search click
+  //
 
   function handleSearchClick() {
     if (searchVal === "") {
       window.alert("Search input empty. Please enter a valid input");
       return;
     }
-    const filterBySearch = users.filter((user) =>
-      user.firstName.toLowerCase().includes(searchVal.toLowerCase())
+    const filterBySearch = users.filter(
+      (user) =>
+        user.firstName.toLowerCase().includes(searchVal.toLowerCase()) ||
+        user.lastName.toLowerCase().includes(searchVal.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchVal.toLowerCase())
     );
     setUsers(filterBySearch);
     setSearchVal("");
@@ -50,7 +55,8 @@ function DataTable() {
     }
   };
   function handleSortName() {
-    const sortedNameArray = users.sort((a, b) => {
+    const copyOfUsers = [...users];
+    const sortedNameArray = copyOfUsers.sort((a, b) => {
       if (a.firstName > b.firstName) return 1;
       if (a.firstName < b.firstName) return -1;
     });
@@ -70,7 +76,7 @@ function DataTable() {
             <div className="relative">
               <input
                 className="w-full bg-white placeholder:text-slate-600 text-slate-700 text-sm border border-slate-900 rounded-md pl-3 pr-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-lg focus:shadow"
-                placeholder="Search by name..."
+                placeholder="Search by name, last name, email..."
                 value={searchVal}
                 onChange={(e) => setSearchVal(e.target.value)}
                 ref={inputEl}
@@ -107,8 +113,21 @@ function DataTable() {
                 <th className="border border-slate-300 w-10 p-3 text-sm tracking-wide text-left">
                   No.
                 </th>
-                <th className="border border-slate-300 w-20 p-3 text-sm tracking-wide text-left">
-                  <button onClick={handleSortName}>First Name</button>
+                <th className=" border border-slate-300 w-20 p-3 text-sm tracking-wide text-left">
+                  <button
+                    onClick={handleSortName}
+                    className="flex items-center justify-between"
+                  >
+                    First Name
+                    <span>
+                      <img
+                        width="80"
+                        height="80"
+                        src="https://img.icons8.com/small/96/long-arrow-down--v1.png"
+                        alt="long-arrow-down--v1"
+                      />
+                    </span>
+                  </button>
                 </th>
                 <th className="border border-slate-300 w-20 p-3 text-sm tracking-wide text-left">
                   Last Name

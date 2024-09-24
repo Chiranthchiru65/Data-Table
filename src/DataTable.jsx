@@ -71,7 +71,7 @@ function DataTable() {
         {/* search bar */}
         <div className="flex justify-between p-4 items-center">
           <h1 className="text-xl mb-2 font-bold ">Data Table</h1>
-          <button onClick={handleSortName}>sort by name</button>
+
           <div className="w-full max-w-sm min-w-[200px]">
             <div className="relative">
               <input
